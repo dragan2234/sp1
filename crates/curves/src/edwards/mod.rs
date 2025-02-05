@@ -1,3 +1,4 @@
+pub mod bandersnatch;
 pub mod ed25519;
 
 use generic_array::GenericArray;
@@ -25,6 +26,7 @@ pub const WORDS_CURVE_POINT: usize = WordsCurvePoint::USIZE;
 
 pub trait EdwardsParameters: EllipticCurveParameters {
     const D: GenericArray<u8, <Self::BaseField as NumLimbs>::Limbs>;
+    const A: GenericArray<u8, <Self::BaseField as NumLimbs>::Limbs>;
 
     fn generator() -> (BigUint, BigUint);
 
@@ -33,6 +35,14 @@ pub trait EdwardsParameters: EllipticCurveParameters {
     fn d_biguint() -> BigUint {
         let mut modulus = BigUint::zero();
         for (i, limb) in Self::D.iter().enumerate() {
+            modulus += BigUint::from(*limb) << (8 * i);
+        }
+        modulus
+    }
+
+    fn a_biguint() -> BigUint {
+        let mut modulus = BigUint::zero();
+        for (i, limb) in Self::A.iter().enumerate() {
             modulus += BigUint::from(*limb) << (8 * i);
         }
         modulus
@@ -49,6 +59,7 @@ pub struct EdwardsCurve<E: EdwardsParameters>(pub E);
 
 impl<E: EdwardsParameters> EdwardsParameters for EdwardsCurve<E> {
     const D: GenericArray<u8, <Self::BaseField as NumLimbs>::Limbs> = E::D;
+    const A: GenericArray<u8, <Self::BaseField as NumLimbs>::Limbs> = E::A;
 
     fn generator() -> (BigUint, BigUint) {
         E::generator()
@@ -59,6 +70,10 @@ impl<E: EdwardsParameters> EdwardsParameters for EdwardsCurve<E> {
     }
 
     fn d_biguint() -> BigUint {
+        E::d_biguint()
+    }
+
+    fn a_biguint() -> BigUint {
         E::d_biguint()
     }
 
@@ -113,11 +128,15 @@ impl<E: EdwardsParameters> AffinePoint<EdwardsCurve<E>> {
         other: &AffinePoint<EdwardsCurve<E>>,
     ) -> AffinePoint<EdwardsCurve<E>> {
         let p = <E as EllipticCurveParameters>::BaseField::modulus();
+        let d = E::d_biguint();
+        let a = E::a_biguint();
+
         let x_3n = (&self.x * &other.y + &self.y * &other.x) % &p;
-        let y_3n = (&self.y * &other.y + &self.x * &other.x) % &p;
+        let axx2 = (a * &self.x * &other.x) % &p;
+        let y_3n = (&self.y * &other.y - axx2) % &p;
 
         let all_xy = (&self.x * &self.y * &other.x * &other.y) % &p;
-        let d = E::d_biguint();
+
         let dxy = (d * &all_xy) % &p;
         let den_x = ((1u32 + &dxy) % &p).modpow(&(&p - 2u32), &p);
         let den_y = ((1u32 + &p - &dxy) % &p).modpow(&(&p - 2u32), &p);

@@ -31,6 +31,8 @@ pub enum PrecompileEvent {
     ShaCompress(ShaCompressEvent),
     /// Keccak256 permute precompile event.
     KeccakPermute(KeccakPermuteEvent),
+    /// Bandersnatch curve add precompile event.
+    BandersnatchAdd(EllipticCurveAddEvent),
     /// Edwards curve add precompile event.
     EdAdd(EllipticCurveAddEvent),
     /// Edwards curve decompress precompile event.
@@ -104,6 +106,7 @@ impl PrecompileLocalMemory for Vec<(SyscallEvent, PrecompileEvent)> {
                 PrecompileEvent::Secp256k1Add(e)
                 | PrecompileEvent::Secp256r1Add(e)
                 | PrecompileEvent::EdAdd(e)
+                | PrecompileEvent::BandersnatchAdd(e)
                 | PrecompileEvent::Bn254Add(e)
                 | PrecompileEvent::Bls12381Add(e) => {
                     iterators.push(e.local_mem_access.iter());
