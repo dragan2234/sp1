@@ -39,7 +39,7 @@ use crate::{
 
 pub const NUM_BANDERSNATCH_ADD_COLS: usize = size_of::<BandersnatchAddAssignCols<u8>>();
 
-/// A set of columns to compute `EdAdd` where a, b are field elements.
+/// A set of columns to compute `BandersnatchAdd` where a, b are field elements.
 /// Right now the number of limbs is assumed to be a constant, although this could be macro-ed
 /// or made generic in the future.
 #[derive(Debug, Clone, AlignedBorrow)]
@@ -137,7 +137,7 @@ impl<F: PrimeField32, E: EllipticCurve + EdwardsParameters> MachineAir<F>
         let mut rows = events
             .par_iter()
             .map(|(_, event)| {
-                let event = if let PrecompileEvent::EdAdd(event) = event {
+                let event = if let PrecompileEvent::BandersnatchAdd(event) = event {
                     event
                 } else {
                     unreachable!();
@@ -186,7 +186,7 @@ impl<F: PrimeField32, E: EllipticCurve + EdwardsParameters> MachineAir<F>
             .map(|events| {
                 let mut blu: HashMap<ByteLookupEvent, usize> = HashMap::new();
                 events.iter().for_each(|(_, event)| {
-                    let event = if let PrecompileEvent::EdAdd(event) = event {
+                    let event = if let PrecompileEvent::BandersnatchAdd(event) = event {
                         event
                     } else {
                         unreachable!();
