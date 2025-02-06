@@ -132,7 +132,7 @@ impl<F: PrimeField32, E: EllipticCurve + EdwardsParameters> MachineAir<F>
         input: &ExecutionRecord,
         _: &mut ExecutionRecord,
     ) -> RowMajorMatrix<F> {
-        let events = input.get_precompile_events(SyscallCode::ED_ADD);
+        let events = input.get_precompile_events(SyscallCode::BANDERSNATCH_ADD);
 
         let mut rows = events
             .par_iter()
@@ -178,7 +178,7 @@ impl<F: PrimeField32, E: EllipticCurve + EdwardsParameters> MachineAir<F>
     }
 
     fn generate_dependencies(&self, input: &Self::Record, output: &mut Self::Record) {
-        let events = input.get_precompile_events(SyscallCode::ED_ADD);
+        let events = input.get_precompile_events(SyscallCode::BANDERSNATCH_ADD);
         let chunk_size = std::cmp::max(events.len() / num_cpus::get(), 1);
 
         let blu_batches = events
@@ -207,7 +207,7 @@ impl<F: PrimeField32, E: EllipticCurve + EdwardsParameters> MachineAir<F>
         if let Some(shape) = shard.shape.as_ref() {
             shape.included::<F, _>(self)
         } else {
-            !shard.get_precompile_events(SyscallCode::ED_ADD).is_empty()
+            !shard.get_precompile_events(SyscallCode::BANDERSNATCH_ADD).is_empty()
         }
     }
 
@@ -342,7 +342,7 @@ where
         builder.receive_syscall(
             local.shard,
             local.clk,
-            AB::F::from_canonical_u32(SyscallCode::ED_ADD.syscall_id()),
+            AB::F::from_canonical_u32(SyscallCode::BANDERSNATCH_ADD.syscall_id()),
             local.p_ptr,
             local.q_ptr,
             local.is_real,

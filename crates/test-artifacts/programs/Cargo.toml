@@ -8,6 +8,7 @@ members = [
   "bls12381-fp2-addsub",
   "bls12381-fp2-mul",
   "bls12381-mul",
+  "bandersnatch-add",
   "bn254-add",
   "bn254-double",
   "bn254-fp",
