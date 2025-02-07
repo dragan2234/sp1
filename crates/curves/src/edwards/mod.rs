@@ -74,7 +74,7 @@ impl<E: EdwardsParameters> EdwardsParameters for EdwardsCurve<E> {
     }
 
     fn a_biguint() -> BigUint {
-        E::d_biguint()
+        E::a_biguint()
     }
 
     fn neutral() -> (BigUint, BigUint) {
@@ -133,7 +133,7 @@ impl<E: EdwardsParameters> AffinePoint<EdwardsCurve<E>> {
 
         let x_3n = (&self.x * &other.y + &self.y * &other.x) % &p;
         let axx2 = (a * &self.x * &other.x) % &p;
-        let y_3n = (&self.y * &other.y - axx2) % &p;
+        let y_3n = (&self.y * &other.y + &p - axx2) % &p;
 
         let all_xy = (&self.x * &self.y * &other.x * &other.y) % &p;
 

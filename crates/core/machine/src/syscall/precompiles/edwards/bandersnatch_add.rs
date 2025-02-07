@@ -283,7 +283,14 @@ where
         local.y3_numerator_with_a.eval(builder, &a_const, &x1, FieldOperation::Mul, local.is_real);
 
         // y3_numerator = y1 * y2 + x1 * x2.
-        local.y3_numerator.eval(builder, &[y1, x1], &[y2, x2], local.is_real);
+        local.y3_numerator.eval(
+            builder,
+            &[y1, local.y3_numerator_with_a.result],
+            &[y2, x2],
+            local.is_real,
+        );
+
+        // let qwe = value_as_limbs(testing);
 
         // f = x1 * x2 * y1 * y2.
         local.x1_mul_y1.eval(builder, &x1, &y1, FieldOperation::Mul, local.is_real);

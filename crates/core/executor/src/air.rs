@@ -126,6 +126,8 @@ pub enum RiscvAirId {
     Global = 43,
     /// The byte chip.
     Byte = 44,
+    /// The Edwards add assign chip.
+    BandersnatchAddAssign = 45,
 }
 
 impl RiscvAirId {
@@ -159,6 +161,7 @@ impl RiscvAirId {
             Self::Program => "Program",
             Self::ShaExtend => "ShaExtend",
             Self::ShaCompress => "ShaCompress",
+            Self::BandersnatchAddAssign => "BandersnatchAddAssign",
             Self::EdAddAssign => "EdAddAssign",
             Self::EdDecompress => "EdDecompress",
             Self::Secp256k1Decompress => "Secp256k1Decompress",
