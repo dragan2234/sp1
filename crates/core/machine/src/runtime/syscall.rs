@@ -357,6 +357,10 @@ pub fn default_syscall_map() -> HashMap<SyscallCode, Arc<dyn Syscall>> {
     syscall_map.insert(SyscallCode::HALT, Arc::new(SyscallHalt {}));
     syscall_map.insert(SyscallCode::SHA_EXTEND, Arc::new(ShaExtendChip::new()));
     syscall_map.insert(SyscallCode::SHA_COMPRESS, Arc::new(ShaCompressChip::new()));
+    syscall_map.insert(
+        SyscallCode::BANDERSNATCH_ADD,
+        Arc::new(BandersnatchAddAssign::<Bandersnatch>::new()),
+    );
     syscall_map.insert(SyscallCode::ED_ADD, Arc::new(EdAddAssignChip::<Ed25519>::new()));
     syscall_map
         .insert(SyscallCode::ED_DECOMPRESS, Arc::new(EdDecompressChip::<Ed25519Parameters>::new()));
@@ -500,6 +504,9 @@ mod tests {
                 SyscallCode::SHA_EXTEND => assert_eq!(code as u32, sp1_zkvm::syscalls::SHA_EXTEND),
                 SyscallCode::SHA_COMPRESS => {
                     assert_eq!(code as u32, sp1_zkvm::syscalls::SHA_COMPRESS)
+                }
+                SyscallCode::BANDERSNATCH_ADD => {
+                    assert_eq!(code as u32, sp1_zkvm::syscalls::BANDERSNATCH_ADD)
                 }
                 SyscallCode::ED_ADD => assert_eq!(code as u32, sp1_zkvm::syscalls::ED_ADD),
                 SyscallCode::ED_DECOMPRESS => {
