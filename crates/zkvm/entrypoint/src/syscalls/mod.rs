@@ -1,3 +1,4 @@
+mod bandersnatch;
 mod bigint;
 mod bls12381;
 mod bn254;
@@ -18,6 +19,7 @@ mod unconstrained;
 #[cfg(feature = "verify")]
 mod verify;
 
+pub use bandersnatch::*;
 pub use bigint::*;
 pub use bls12381::*;
 pub use bn254::*;
@@ -88,6 +90,9 @@ pub const SECP256R1_DECOMPRESS: u32 = 0x00_00_01_2E;
 
 /// Executes `U256XU2048_MUL`.
 pub const U256XU2048_MUL: u32 = 0x00_01_01_2F;
+
+/// Executes `BANDERSNATCH_ADD`
+pub const BANDERSNATCH_ADD: u32 = 0x00_00_01_2F;
 
 /// Executes `BN254_ADD`.
 pub const BN254_ADD: u32 = 0x00_01_01_0E;

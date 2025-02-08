@@ -59,6 +59,9 @@ pub enum SyscallCode {
     /// Executes the `ED_ADD` precompile.
     ED_ADD = 0x00_01_01_07,
 
+    /// Executes the `BANDERSNATCH_ADD` precompile.
+    BANDERSNATCH_ADD = 0x00_00_01_2F,
+
     /// Executes the `ED_DECOMPRESS` precompile.
     ED_DECOMPRESS = 0x00_00_01_08,
 
@@ -166,6 +169,7 @@ impl SyscallCode {
             0x00_00_00_04 => SyscallCode::EXIT_UNCONSTRAINED,
             0x00_30_01_05 => SyscallCode::SHA_EXTEND,
             0x00_01_01_06 => SyscallCode::SHA_COMPRESS,
+            0x00_00_01_2F => SyscallCode::BANDERSNATCH_ADD,
             0x00_01_01_07 => SyscallCode::ED_ADD,
             0x00_00_01_08 => SyscallCode::ED_DECOMPRESS,
             0x00_01_01_09 => SyscallCode::KECCAK_PERMUTE,
@@ -353,6 +357,10 @@ pub fn default_syscall_map() -> HashMap<SyscallCode, Arc<dyn Syscall>> {
     syscall_map.insert(SyscallCode::HALT, Arc::new(SyscallHalt {}));
     syscall_map.insert(SyscallCode::SHA_EXTEND, Arc::new(ShaExtendChip::new()));
     syscall_map.insert(SyscallCode::SHA_COMPRESS, Arc::new(ShaCompressChip::new()));
+    syscall_map.insert(
+        SyscallCode::BANDERSNATCH_ADD,
+        Arc::new(BandersnatchAddAssign::<Bandersnatch>::new()),
+    );
     syscall_map.insert(SyscallCode::ED_ADD, Arc::new(EdAddAssignChip::<Ed25519>::new()));
     syscall_map
         .insert(SyscallCode::ED_DECOMPRESS, Arc::new(EdDecompressChip::<Ed25519Parameters>::new()));
@@ -496,6 +504,9 @@ mod tests {
                 SyscallCode::SHA_EXTEND => assert_eq!(code as u32, sp1_zkvm::syscalls::SHA_EXTEND),
                 SyscallCode::SHA_COMPRESS => {
                     assert_eq!(code as u32, sp1_zkvm::syscalls::SHA_COMPRESS)
+                }
+                SyscallCode::BANDERSNATCH_ADD => {
+                    assert_eq!(code as u32, sp1_zkvm::syscalls::BANDERSNATCH_ADD)
                 }
                 SyscallCode::ED_ADD => assert_eq!(code as u32, sp1_zkvm::syscalls::ED_ADD),
                 SyscallCode::ED_DECOMPRESS => {
