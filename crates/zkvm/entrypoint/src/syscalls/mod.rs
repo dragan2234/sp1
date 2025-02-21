@@ -92,7 +92,7 @@ pub const SECP256R1_DECOMPRESS: u32 = 0x00_00_01_2E;
 pub const U256XU2048_MUL: u32 = 0x00_01_01_2F;
 
 /// Executes `BANDERSNATCH_ADD`
-pub const BANDERSNATCH_ADD: u32 = 0x00_00_01_2F;
+pub const BANDERSNATCH_ADD: u32 = 0x00_01_01_3A;
 
 /// Executes `BN254_ADD`.
 pub const BN254_ADD: u32 = 0x00_01_01_0E;
