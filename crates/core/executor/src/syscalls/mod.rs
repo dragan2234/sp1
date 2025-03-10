@@ -22,7 +22,10 @@ pub use code::*;
 pub use context::*;
 use hint::{HintLenSyscall, HintReadSyscall};
 use precompiles::{
-    edwards::{add::EdwardsAddAssignSyscall, decompress::EdwardsDecompressSyscall},
+    edwards::{
+        add::EdwardsAddAssignSyscall, bandersnatch_add::BandersnatchAddAssignSyscall,
+        decompress::EdwardsDecompressSyscall,
+    },
     fptower::{Fp2AddSubSyscall, Fp2MulSyscall, FpOpSyscall},
     keccak256::permute::Keccak256PermuteSyscall,
     sha256::{compress::Sha256CompressSyscall, extend::Sha256ExtendSyscall},
@@ -35,7 +38,10 @@ use precompiles::{
 };
 
 use sp1_curves::{
-    edwards::ed25519::{Ed25519, Ed25519Parameters},
+    edwards::{
+        bandersnatch::Bandersnatch,
+        ed25519::{Ed25519, Ed25519Parameters},
+    },
     weierstrass::{
         bls12_381::{Bls12381, Bls12381BaseField},
         bn254::{Bn254, Bn254BaseField},
@@ -86,6 +92,11 @@ pub fn default_syscall_map() -> HashMap<SyscallCode, Arc<dyn Syscall>> {
     syscall_map.insert(SyscallCode::SHA_EXTEND, Arc::new(Sha256ExtendSyscall));
 
     syscall_map.insert(SyscallCode::SHA_COMPRESS, Arc::new(Sha256CompressSyscall));
+
+    syscall_map.insert(
+        SyscallCode::BANDERSNATCH_ADD,
+        Arc::new(BandersnatchAddAssignSyscall::<Bandersnatch>::new()),
+    );
 
     syscall_map.insert(SyscallCode::ED_ADD, Arc::new(EdwardsAddAssignSyscall::<Ed25519>::new()));
 

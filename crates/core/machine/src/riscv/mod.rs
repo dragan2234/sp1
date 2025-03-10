@@ -8,7 +8,10 @@ use p3_field::PrimeField32;
 use sp1_core_executor::{
     events::PrecompileLocalMemory, syscalls::SyscallCode, ExecutionRecord, Program, RiscvAirId,
 };
-use sp1_curves::weierstrass::{bls12_381::Bls12381BaseField, bn254::Bn254BaseField};
+use sp1_curves::{
+    edwards::bandersnatch::BandersnatchParameters,
+    weierstrass::{bls12_381::Bls12381BaseField, bn254::Bn254BaseField},
+};
 use sp1_stark::{
     air::{InteractionScope, MachineAir, SP1_PROOF_NUM_PV_ELTS},
     Chip, InteractionKind, StarkGenericConfig, StarkMachine,
@@ -39,7 +42,7 @@ pub(crate) mod riscv_chips {
         syscall::{
             chip::SyscallChip,
             precompiles::{
-                edwards::{EdAddAssignChip, EdDecompressChip},
+                edwards::{BandersnatchAddAssignChip, EdAddAssignChip, EdDecompressChip},
                 keccak256::KeccakPermuteChip,
                 sha256::{ShaCompressChip, ShaExtendChip},
                 u256x2048_mul::U256x2048MulChip,
@@ -120,6 +123,8 @@ pub enum RiscvAir<F: PrimeField32> {
     Sha256Extend(ShaExtendChip),
     /// A precompile for sha256 compress.
     Sha256Compress(ShaCompressChip),
+    /// A precompile for addition on the Elliptic curve bandersnatch.
+    BandersnatchAdd(BandersnatchAddAssignChip<EdwardsCurve<BandersnatchParameters>>),
     /// A precompile for addition on the Elliptic curve ed25519.
     Ed25519Add(EdAddAssignChip<EdwardsCurve<Ed25519Parameters>>),
     /// A precompile for decompressing a point on the Edwards curve ed25519.
@@ -211,6 +216,13 @@ impl<F: PrimeField32> RiscvAir<F> {
         let sha_compress = Chip::new(RiscvAir::Sha256Compress(ShaCompressChip::default()));
         costs.insert(sha_compress.name(), 80 * sha_compress.cost());
         chips.push(sha_compress);
+
+        let bandersnatch_add_assign =
+            Chip::new(RiscvAir::BandersnatchAdd(BandersnatchAddAssignChip::<
+                EdwardsCurve<BandersnatchParameters>,
+            >::new()));
+        costs.insert(bandersnatch_add_assign.name(), bandersnatch_add_assign.cost());
+        chips.push(bandersnatch_add_assign);
 
         let ed_add_assign = Chip::new(RiscvAir::Ed25519Add(EdAddAssignChip::<
             EdwardsCurve<Ed25519Parameters>,
@@ -565,6 +577,7 @@ impl<F: PrimeField32> RiscvAir<F> {
             Self::Bn254Fp(_) => SyscallCode::BN254_FP_ADD,
             Self::Bn254Fp2AddSub(_) => SyscallCode::BN254_FP2_ADD,
             Self::Bn254Fp2Mul(_) => SyscallCode::BN254_FP2_MUL,
+            Self::BandersnatchAdd(_) => SyscallCode::BANDERSNATCH_ADD,
             Self::Ed25519Add(_) => SyscallCode::ED_ADD,
             Self::Ed25519Decompress(_) => SyscallCode::ED_DECOMPRESS,
             Self::KeccakP(_) => SyscallCode::KECCAK_PERMUTE,
