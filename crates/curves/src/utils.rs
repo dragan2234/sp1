@@ -1,3 +1,8 @@
+// use elliptic_curve::{AffinePoint, Curve, CurveArithmetic};
+use crate::edwards;
+use crate::edwards::EdwardsParameters;
+use crate::AffinePoint;
+use crate::EllipticCurve;
 use num::BigUint;
 
 pub fn biguint_to_bits_le(integer: &BigUint, num_bits: usize) -> Vec<bool> {
@@ -20,6 +25,28 @@ pub fn biguint_to_limbs<const N: usize>(integer: &BigUint) -> [u8; N] {
     let mut limbs = [0u8; N];
     limbs.copy_from_slice(&bytes);
     limbs
+}
+
+#[inline]
+pub fn multi_scalar_mul<C: EdwardsParameters>(
+    bases: &[AffinePoint<edwards::EdwardsCurve<C>>],
+    scalars: &[BigUint],
+) -> AffinePoint<edwards::EdwardsCurve<C>> {
+    let mut result = AffinePoint::new(C::neutral().0, C::neutral().1);
+
+    for (base, scalar) in bases.iter().zip(scalars.iter()) {
+        // println!("base is: {:?}", base);
+        // println!("scalar is: {:?}", scalar);
+
+        // println!("scalar mul is: {:?}", base.scalar_mul(scalar));
+
+        let baseing = base.scalar_mul(scalar);
+        result = result.ed_add(&baseing);
+
+        // println!("current result is: {:?}", result);
+    }
+
+    result
 }
 
 #[inline]

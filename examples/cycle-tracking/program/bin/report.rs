@@ -22,4 +22,11 @@ pub fn main() {
         nums.push(c);
     }
     println!("cycle-tracker-report-end: setup");
+
+    println!("cycle-tracker-report-start: main-body");
+    for i in 0..2 {
+        let result = expensive_function(nums[nums.len() - i - 1]);
+        println!("result: {}", result);
+    }
+    println!("cycle-tracker-report-end: main-body");
 }

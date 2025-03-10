@@ -174,14 +174,61 @@ mod tests {
             AffinePoint::<EdwardsCurve<BandersnatchParameters>>::new(x, y)
         };
 
-        let double = point.clone().add(point.clone());
+        // let double = point.clone().add(point.clone());
 
         let qwe = BigUint::from_str("80").unwrap();
 
-        let scalar_mul_test = point.clone().scalar_mul(&qwe);
+        // let scalar_mul_test = point.clone().scalar_mul(&qwe);
         // println!("affine double: {:?}", double);
 
         // println!("scalar mul test: {:?}", scalar_mul_test);
+
+        let mut scalars_string = [
+            "13108968793781547619861935127046491459309155893440570251786403306729687672800",
+            "13108968793781547619861935127046491459309155893440570251786403306729687672799",
+            "13108968793781547619861935127046491459309155893440570251786403306729687672798",
+            "13108968793781547619861935127046491459309155893440570251786403306729687672797",
+        ];
+
+        let scalars: Vec<_> =
+            scalars_string.into_iter().map(|x| BigUint::from_str(x).unwrap()).collect();
+
+        let mut points = [
+            (
+                "18886178867200960497001835917649091219057080094937609519140440539760939937304",
+                "19188667384257783945677642223292697773471335439753913231509108946878080696678",
+            ),
+            (
+                "21829743261194590194992413705867576097158323059182896808782966767024601242412",
+                "19075870567762384361343718229920461045746972450262741916171739040424605531019",
+            ),
+            (
+                "19213755708763254619264831853746015614457568707574289360541474768076689519718",
+                "17364390373284516257285034247139577682165868767001357086426373468799918686336",
+            ),
+            (
+                "9750030165270825669804718340526217750714550471942743324567662196134356926171",
+                "17374475068068392136182018513238520664896609417860070833886908001325858074001",
+            ),
+        ];
+
+        let affine_points: Vec<_> = points
+            .into_iter()
+            .map(|(x, y)| {
+                AffinePoint::<EdwardsCurve<BandersnatchParameters>>::new(
+                    BigUint::from_str(x).unwrap(),
+                    BigUint::from_str(y).unwrap(),
+                )
+            })
+            .collect();
+
+        let afine_slice = affine_points.as_slice();
+
+        let mut scalars_slice = scalars;
+
+        let result = multi_scalar_mul(afine_slice, scalars_slice.as_slice());
+
+        // println!("results is: {:?}", result);
     }
 
     #[test]

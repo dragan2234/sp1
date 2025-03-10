@@ -11,7 +11,10 @@ use crate::{
     AffinePoint, EllipticCurve, EllipticCurveParameters,
 };
 
-use crate::{edwards::ed25519::Ed25519BaseField, params::NumWords};
+use crate::{
+    edwards::bandersnatch::BandersnatchBaseField, edwards::ed25519::Ed25519BaseField,
+    params::NumWords,
+};
 use typenum::Unsigned;
 
 pub type Limbs = <Ed25519BaseField as NumLimbs>::Limbs;
