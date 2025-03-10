@@ -16,6 +16,8 @@ pub const CYCLE_TRACKER_ELF: &[u8] = include_elf!("cycle-tracker-test");
 
 pub const ED_ADD_ELF: &[u8] = include_elf!("ed-add-test");
 
+pub const BANDERSNATCH_ADD_ELF: &[u8] = include_elf!("bandersnatch-add-test");
+
 pub const ED_DECOMPRESS_ELF: &[u8] = include_elf!("ed-decompress-test");
 
 pub const KECCAK_PERMUTE_ELF: &[u8] = include_elf!("keccak-permute-test");

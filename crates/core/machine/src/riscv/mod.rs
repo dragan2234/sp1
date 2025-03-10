@@ -34,7 +34,7 @@ pub(crate) mod riscv_chips {
         syscall::{
             chip::SyscallChip,
             precompiles::{
-                edwards::{EdAddAssignChip, EdDecompressChip},
+                edwards::{BandersnatchAddAssignChip, EdAddAssignChip, EdDecompressChip},
                 keccak256::KeccakPermuteChip,
                 sha256::{ShaCompressChip, ShaExtendChip},
                 u256x2048_mul::U256x2048MulChip,
