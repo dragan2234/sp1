@@ -62,6 +62,9 @@ pub enum SyscallCode {
     /// Executes the `ED_DECOMPRESS` precompile.
     ED_DECOMPRESS = 0x00_00_01_08,
 
+    /// Executes the `BANDERSNATCH_ADD` precompile.
+    BANDERSNATCH_ADD = 0x00_01_01_3A,
+
     /// Executes the `KECCAK_PERMUTE` precompile.
     KECCAK_PERMUTE = 0x00_01_01_09,
 
@@ -166,6 +169,7 @@ impl SyscallCode {
             0x00_00_00_04 => SyscallCode::EXIT_UNCONSTRAINED,
             0x00_30_01_05 => SyscallCode::SHA_EXTEND,
             0x00_01_01_06 => SyscallCode::SHA_COMPRESS,
+            0x00_01_01_3A => SyscallCode::BANDERSNATCH_ADD,
             0x00_01_01_07 => SyscallCode::ED_ADD,
             0x00_00_01_08 => SyscallCode::ED_DECOMPRESS,
             0x00_01_01_09 => SyscallCode::KECCAK_PERMUTE,
@@ -416,6 +420,12 @@ pub fn default_syscall_map() -> HashMap<SyscallCode, Arc<dyn Syscall>> {
         SyscallCode::BN254_FP_ADD,
         Arc::new(FpOpSyscall::<Bn254BaseField>::new(FieldOperation::Add)),
     );
+
+    syscall_map.insert(
+        SyscallCode::BANDERSNATCH_ADD,
+        Arc::new(BandersnatchAddAssign::<Bandersnatch>::new()),
+    );
+
     syscall_map.insert(
         SyscallCode::BN254_FP_SUB,
         Arc::new(FpOpSyscall::<Bn254BaseField>::new(FieldOperation::Sub)),
@@ -515,6 +525,9 @@ mod tests {
                 }
                 SyscallCode::SECP256R1_DOUBLE => {
                     assert_eq!(code as u32, sp1_zkvm::syscalls::SECP256R1_DOUBLE)
+                }
+                SyscallCode::BANDERSNATCH_ADD => {
+                    assert_eq!(code as u32, sp1_zkvm::syscalls::BANDERSNATCH_ADD)
                 }
                 SyscallCode::BLS12381_ADD => {
                     assert_eq!(code as u32, sp1_zkvm::syscalls::BLS12381_ADD)
