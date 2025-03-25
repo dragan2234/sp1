@@ -138,8 +138,6 @@ pub fn main() {
         scalars_string.into_iter().map(|x| BigUint::from_str(x).unwrap().to_u32_digits()).collect();
 
     let scalar_refs: Vec<&[u32]> = scalars.iter().map(Vec::as_slice).collect();
-    // sp1_zkvm::lib::utils::AffinePoint::from_le_bytes(bytes);
-    // let points = affine_points;
 
     println!("cycle-tracker-report-start: msm-syscall");
     let precompile_msm = sp1_zkvm::lib::utils::AffinePoint::multi_scalar_multiplication_n(
@@ -156,6 +154,4 @@ pub fn main() {
         &precomputed_points,
     );
     println!("cycle-tracker-report-end: precomputed-msm-syscall");
-
-    // assert_eq!(what, is);
 }

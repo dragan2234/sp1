@@ -5,11 +5,6 @@ edition = "2021"
 publish = false
 
 [[bin]]
-name = "normal"
-path = "bin/normal.rs"
-
-
-[[bin]]
 name = "report"
 path = "bin/report.rs"
 
