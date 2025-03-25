@@ -58,12 +58,6 @@ pub fn main() {
     assert_eq!(c_point.to_le_bytes().as_mut_slice(), c);
 
     let (x, y) = sp1_curves::edwards::bandersnatch::Bandersnatch::generator();
-    // let a_g: sp1_curves::edwards::EdwardsCurve<_> = sp1_curves::edwards::E
-
-    // let precompile_msm =
-    //     sp1_zkvm::lib::utils::AffinePoint::multi_scalar_multiplication_n(points, scalars);
-
-    // let non_precompile_msms = sp1_curves::utils::multi_scalar_mul(bases, scalars);
 
     let a_g: AffinePoint<EdwardsCurve<BandersnatchParameters>> = sp1_curves::AffinePoint::new(x, y);
 
@@ -72,8 +66,6 @@ pub fn main() {
     let a_g_ed: AffinePoint<EdwardsCurve<Ed25519Parameters>> =
         sp1_curves::AffinePoint::new(x_ed, y_ed);
 
-    // sp1_curves::edwards::bandersnatch::Bandersnatch::ec_add(p, q)
-
     println!("cycle-tracker-report-start: bandersnatch-add-NO-syscall");
     let result = sp1_curves::edwards::bandersnatch::Bandersnatch::ec_add(&a_g, &a_g.clone());
     println!("cycle-tracker-report-end: bandersnatch-add-NO-syscall");
@@ -81,14 +73,6 @@ pub fn main() {
     println!("cycle-tracker-report-start: bandersnatch-mul-NO-syscall");
     a_g.scalar_mul(&BigUint::from_str("800").unwrap());
     println!("cycle-tracker-report-end: bandersnatch-mul-NO-syscall");
-
-    // sp1_curves::AffinePoint::<EdwardsCurve<BandersnatchParameters>>::
-    // sp1_curves::edwards::bandersnatch::Bandersnatch::ec_add(p, q)
-
-    // a_g.
-    // let a_g = sp1_curves::edwards::bandersnatch::Bandersnatch::ec_add(sp1_curves::edwards::bandersnatch::Bandersnatch::generator().to_owned(), .to_owned());
-
-    // let resultat = a_g.
 
     let mut base_scalars_string = [
         "13108968793781547619861935127046491459309155893440570251786403306729687672800",
@@ -138,10 +122,6 @@ pub fn main() {
 
     let mut scalars_slice = scalars;
 
-    println!("cycle-tracker-report-start: msm-NO-syscall");
-    // let result = sp1_curves::utils::multi_scalar_mul(afine_slice, scalars_slice.as_slice());
-    println!("cycle-tracker-report-end: msm-NO-syscall");
-
     let points: Vec<sp1_zkvm::lib::bandersnatch::Bandersnatch> = affine_points
         .iter_mut()
         .map(|affine_point| {
@@ -161,26 +141,21 @@ pub fn main() {
     // sp1_zkvm::lib::utils::AffinePoint::from_le_bytes(bytes);
     // let points = affine_points;
 
-    println!("cycle-tracker-report-start: AAAmsm-syscall");
+    println!("cycle-tracker-report-start: msm-syscall");
     let precompile_msm = sp1_zkvm::lib::utils::AffinePoint::multi_scalar_multiplication_n(
         points.clone(),
         scalar_refs.clone(),
     );
-    println!("cycle-tracker-report-end: AAAmsm-syscall");
-
-    // let binding = result.clone().to_words_le();
-    // let what = binding.as_slice();
-
-    // let is = precompile_msm.limbs_ref();
+    println!("cycle-tracker-report-end: msm-syscall");
 
     let precomputed_points = PrecomputedPoints::new(&points.clone(), 256);
 
-    println!("cycle-tracker-report-start: AAAprecomputed-msm-syscall");
+    println!("cycle-tracker-report-start: precomputed-msm-syscall");
     let precompile_msm = sp1_zkvm::lib::bandersnatch::Bandersnatch::msm_with_precomputed(
         &scalar_refs.clone(),
         &precomputed_points,
     );
-    println!("cycle-tracker-report-end: AAAprecomputed-msm-syscall");
+    println!("cycle-tracker-report-end: precomputed-msm-syscall");
 
     // assert_eq!(what, is);
 }

@@ -1,5 +1,4 @@
 use crate::{syscall_bandersnatch_add, utils::AffinePoint};
-use std::collections::HashMap;
 
 /// The number of limbs in [Bandersnatch].
 pub const N: usize = 16;

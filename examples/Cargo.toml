@@ -2,6 +2,8 @@
 members = [
   "aggregation/program",
   "aggregation/script",
+  "bandersnatch/program",
+  "bandersnatch/script",
   "bls12381/program",
   "bls12381/script",
   "bn254/program",

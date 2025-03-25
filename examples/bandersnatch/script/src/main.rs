@@ -20,7 +20,6 @@ fn main() {
         println!("{}: {}", key, value);
     }
 
-    println!("AAA jebevmnss ti mamu");
     // Get the "setup" cycle count from the report program.
     // let setup_cycles = report.cycle_tracker.get("setup").unwrap();
     // println!(
