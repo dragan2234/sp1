@@ -1,0 +1,16 @@
+[package]
+name = "bandersnatch-tracking-program"
+version = "1.1.0"
+edition = "2021"
+publish = false
+
+[[bin]]
+name = "report"
+path = "bin/report.rs"
+
+
+[dependencies]
+sp1-zkvm = { path = "../../../crates/zkvm/entrypoint" }
+sp1-derive = { path = "../../../crates/derive" }
+sp1-curves = { path = "../../../crates/curves" }
+bytemuck = "1.13"

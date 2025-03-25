@@ -34,7 +34,7 @@ pub(crate) mod riscv_chips {
         syscall::{
             chip::SyscallChip,
             precompiles::{
-                edwards::{EdAddAssignChip, EdDecompressChip},
+                edwards::{BandersnatchAddAssignChip, EdAddAssignChip, EdDecompressChip},
                 keccak256::KeccakPermuteChip,
                 sha256::{ShaCompressChip, ShaExtendChip},
                 u256x2048_mul::U256x2048MulChip,
@@ -47,7 +47,7 @@ pub(crate) mod riscv_chips {
         },
     };
     pub use sp1_curves::{
-        edwards::{ed25519::Ed25519Parameters, EdwardsCurve},
+        edwards::{bandersnatch::BandersnatchParameters, ed25519::Ed25519Parameters, EdwardsCurve},
         weierstrass::{
             bls12_381::Bls12381Parameters, bn254::Bn254Parameters, secp256k1::Secp256k1Parameters,
             secp256r1::Secp256r1Parameters, SwCurve,
@@ -121,6 +121,8 @@ pub enum RiscvAir<F: PrimeField32> {
     Ed25519Decompress(EdDecompressChip<Ed25519Parameters>),
     /// A precompile for decompressing a point on the K256 curve.
     K256Decompress(WeierstrassDecompressChip<SwCurve<Secp256k1Parameters>>),
+    /// A precompile for addition on the Elliptic curve bandersnatch.
+    BandersnatchAdd(BandersnatchAddAssignChip<EdwardsCurve<BandersnatchParameters>>),
     /// A precompile for decompressing a point on the P256 curve.
     P256Decompress(WeierstrassDecompressChip<SwCurve<Secp256r1Parameters>>),
     /// A precompile for addition on the Elliptic curve secp256k1.
@@ -216,6 +218,13 @@ impl<F: PrimeField32> RiscvAir<F> {
         >::new()));
         costs.insert(ed_add_assign.name(), ed_add_assign.cost());
         chips.push(ed_add_assign);
+
+        let bandersnatch_add_assign =
+            Chip::new(RiscvAir::BandersnatchAdd(BandersnatchAddAssignChip::<
+                EdwardsCurve<BandersnatchParameters>,
+            >::new()));
+        costs.insert(bandersnatch_add_assign.name(), bandersnatch_add_assign.cost());
+        chips.push(bandersnatch_add_assign);
 
         let ed_decompress = Chip::new(RiscvAir::Ed25519Decompress(EdDecompressChip::<
             Ed25519Parameters,
@@ -563,6 +572,7 @@ impl From<RiscvAirDiscriminants> for RiscvAirId {
             RiscvAirDiscriminants::Bn254Fp => RiscvAirId::Bn254FpOpAssign,
             RiscvAirDiscriminants::Bn254Fp2Mul => RiscvAirId::Bn254Fp2MulAssign,
             RiscvAirDiscriminants::Bn254Fp2AddSub => RiscvAirId::Bn254Fp2AddSubAssign,
+            RiscvAirDiscriminants::BandersnatchAdd => RiscvAirId::BandersnatchAddAssign,
         }
     }
 }

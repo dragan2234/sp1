@@ -138,6 +138,8 @@ pub enum RiscvAirId {
     Global = 43,
     /// The byte chip.
     Byte = 44,
+    /// The Edwards add assign chip.
+    BandersnatchAddAssign = 45,
 }
 
 impl RiscvAirId {
@@ -209,6 +211,7 @@ impl RiscvAirId {
                 | RiscvAirId::Bn254Fp2AddSubAssign
                 | RiscvAirId::Bn254Fp2MulAssign
                 | RiscvAirId::Bls12381Decompress
+                | RiscvAirId::BandersnatchAddAssign
         )
     }
 

@@ -49,6 +49,12 @@ impl EdwardsParameters for Ed25519Parameters {
         121, 64, 199, 140, 115, 254, 111, 43, 238, 108, 3, 82,
     ]);
 
+    // a = -1
+    const A: GenericArray<u8, U32> = GenericArray::from_array([
+        236, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+        255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 127,
+    ]);
+
     fn prime_group_order() -> BigUint {
         BigUint::from(2u32).pow(252) + BigUint::from(27742317777372353535851937790883648493u128)
     }

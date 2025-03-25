@@ -1,6 +1,6 @@
 use itertools::izip;
 
-pub const INPUT_SIZE: usize = 90;
+pub const INPUT_SIZE: usize = 92;
 
 pub fn predict(input: &[usize; INPUT_SIZE / 2]) -> f64 {
     let input = [input.map(|x| x as f64), input.map(|x| 2f64.powi(x.try_into().unwrap()))].concat();
@@ -118,6 +118,8 @@ pub(crate) const PARAMS: Params<INPUT_SIZE> = Params {
         232823.74341643817,
         420282.39699037175,
         65536.0,
+        420282.39699037175, // placeholder value
+        65536.0,            // placeholder value
     ],
     std: [
         7.185413671836201,
@@ -210,6 +212,8 @@ pub(crate) const PARAMS: Params<INPUT_SIZE> = Params {
         66446.14564968774,
         441190.2675070037,
         0.0,
+        441190.2675070037, // placeholder value
+        0.0,               // placeholder value
     ],
     coefs: [
         3.4394572520867,
@@ -300,6 +304,8 @@ pub(crate) const PARAMS: Params<INPUT_SIZE> = Params {
         53.995150201829865,
         60.515898660880275,
         88.22315498928933,
+        296.047004079781,
+        0.0,
         296.047004079781,
         0.0,
     ],
