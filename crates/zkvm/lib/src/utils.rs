@@ -111,6 +111,20 @@ pub trait AffinePoint<const N: usize>: Clone + Sized {
         }
         res
     }
+
+    /// Performs multi-scalar multiplication (MSM) using `mul_assign`.
+    /// Scalars must be in little-endian `&[u32]` format.
+    fn multi_scalar_multiplication_n(points: Vec<Self>, scalars: Vec<&[u32]>) -> Self {
+        let mut res = Self::identity();
+
+        for (point, scalar) in points.iter().zip(scalars.iter()) {
+            let mut temp_point = point.clone();
+            temp_point.mul_assign(scalar); // Efficient scalar multiplication
+            res.add_assign(&temp_point); // Accumulate the result
+        }
+
+        res
+    }
 }
 
 /// Errors that can occur during scalar multiplication of an [`AffinePoint`].

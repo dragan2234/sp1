@@ -3,6 +3,7 @@
 //! Documentation for these syscalls can be found in the zkVM entrypoint
 //! `sp1_zkvm::syscalls` module.
 
+pub mod bandersnatch;
 pub mod bls12381;
 pub mod bn254;
 
@@ -37,6 +38,9 @@ extern "C" {
 
     /// Executes an Ed25519 curve addition on the given points.
     pub fn syscall_ed_add(p: *mut [u32; 16], q: *const [u32; 16]);
+
+    /// Executes an Bandersnatch curve addition on the given points.
+    pub fn syscall_bandersnatch_add(p: *mut [u32; 16], q: *const [u32; 16]);
 
     /// Executes an Ed25519 curve decompression on the given point.
     pub fn syscall_ed_decompress(point: &mut [u8; 64]);

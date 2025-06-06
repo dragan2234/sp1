@@ -5,6 +5,14 @@
         "editor.formatOnSave": true,
         "editor.hover.enabled": true
     },
+    "rust-analyzer.rustfmt.overrideCommand": [
+        "rustfmt",
+        "+nightly",
+        "--edition",
+        "2021",
+        "--config",
+        "unstable_features=false,match_block_trailing_comma=false"
+    ],
     "editor.rulers": [
         100
     ],

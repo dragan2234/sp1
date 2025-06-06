@@ -1,3 +1,4 @@
+mod bandersnatch;
 mod bigint;
 mod bls12381;
 mod bn254;
@@ -18,6 +19,7 @@ mod unconstrained;
 #[cfg(feature = "verify")]
 mod verify;
 
+pub use bandersnatch::*;
 pub use bigint::*;
 pub use bls12381::*;
 pub use bn254::*;
@@ -61,6 +63,9 @@ pub const SHA_COMPRESS: u32 = 0x00_01_01_06;
 
 /// Executes `ED_ADD`.
 pub const ED_ADD: u32 = 0x00_01_01_07;
+
+/// Executes `BANDERSNATCH_ADD`.
+pub const BANDERSNATCH_ADD: u32 = 0x00_01_01_3A;
 
 /// Executes `ED_DECOMPRESS`.
 pub const ED_DECOMPRESS: u32 = 0x00_00_01_08;

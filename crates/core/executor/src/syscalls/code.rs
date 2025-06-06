@@ -58,6 +58,9 @@ pub enum SyscallCode {
     /// Executes the `SHA_COMPRESS` precompile.
     SHA_COMPRESS = 0x00_01_01_06,
 
+    /// Executes the `BANDERSNATCH_ADD` precompile.
+    BANDERSNATCH_ADD = 0x00_01_01_3A,
+
     /// Executes the `ED_ADD` precompile.
     ED_ADD = 0x00_01_01_07,
 
@@ -169,6 +172,7 @@ impl SyscallCode {
             0x00_00_00_04 => SyscallCode::EXIT_UNCONSTRAINED,
             0x00_30_01_05 => SyscallCode::SHA_EXTEND,
             0x00_01_01_06 => SyscallCode::SHA_COMPRESS,
+            0x00_01_01_3A => SyscallCode::BANDERSNATCH_ADD,
             0x00_01_01_07 => SyscallCode::ED_ADD,
             0x00_00_01_08 => SyscallCode::ED_DECOMPRESS,
             0x00_01_01_09 => SyscallCode::KECCAK_PERMUTE,
@@ -245,6 +249,7 @@ impl SyscallCode {
         Some(match self {
             SyscallCode::SHA_EXTEND => RiscvAirId::ShaExtend,
             SyscallCode::SHA_COMPRESS => RiscvAirId::ShaCompress,
+            SyscallCode::BANDERSNATCH_ADD => RiscvAirId::BandersnatchAddAssign,
             SyscallCode::ED_ADD => RiscvAirId::EdAddAssign,
             SyscallCode::ED_DECOMPRESS => RiscvAirId::EdDecompress,
             SyscallCode::KECCAK_PERMUTE => RiscvAirId::KeccakPermute,
